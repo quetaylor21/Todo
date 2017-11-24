@@ -32,3 +32,5 @@
     app.listen(8060, () => {
       console.log('Sarted on port 8060')
     });
+
+    module.exports = {app}
