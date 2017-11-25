@@ -5,13 +5,19 @@
       var {app} = require('./../server');
       var {Todo} = require('./../models/todo');
 
+      const todosList = [{
+        text: 'test todo 1'
+      }, {
+        text: 'test todo two'
+      }]
+
       // lets you run some code before every test
       //testing lifecycle method
       //using to setup database
       beforeEach((done) => {
         Todo.remove({}).then(() => {
-          done();
-        });
+          Todo.insertMany(todosList);
+        }).then(() => done());
       });
 
       describe('Post todos', () => {
@@ -32,7 +38,7 @@
               return done(err)
             }
 
-            Todo.find().then((todos) => {
+            Todo.find({text: text}).then((todos) => {
               expect(todos.length).toBe(1);
               expect(todos[0].text).toBe(text);
               done();
@@ -55,7 +61,7 @@
             }
 
             Todo.find().then((todo) => {
-              expect(todo.length).toBe(0)
+              expect(todo.length).toBe(2)
               done();
             }).catch((e) => {
               done(e)
@@ -63,4 +69,18 @@
           })
 
         });
+
+        describe('GET /todos', () => {
+          it('Should get all of the todos', (done) => {
+
+            request(app)
+            .get('/todos')
+            .expect(200)
+            .expect((res) => {
+              expect(res.body.todos.length).toBe(2)
+            })
+            .end(done);
+          })
+        })
+
       });
