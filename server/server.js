@@ -3,6 +3,7 @@
     const bodyParser = require('body-parser')
 
     const {mongoose} = require('./db/mongoose');
+    const {ObjectID} = require('mongodb');
     var {Todo} = require('./models/todo');
     var {User} = require('./models/user');
 
@@ -34,6 +35,22 @@
         res.send({todos})
       }, (err) => {
         res.status(400).send(err)
+      })
+    })
+
+    // the colin is setting the ID variable to use in the query
+    app.get('/todos/:id', (req, res) => {
+      var id = req.params.id;
+      if(!ObjectID.isValid(id)){
+        return res.status(404).send();
+      }
+      Todo.findById(id).then((doc) => {
+        if(!doc){
+          return res.status(404).send()
+        }
+        res.send({doc})
+      }).catch((err) => {
+        res.status(400).send()
       })
     })
     app.listen(8060, () => {
