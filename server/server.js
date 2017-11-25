@@ -18,8 +18,8 @@
         text: req.body.text
       });
 
-      todo.save().then((doc) => {
-        res.send(doc);
+      todo.save().then((todo) => {
+        res.send(todo);
         // console.log('todo was created');
         // console.log(doc);
       }, (e) => {
@@ -44,12 +44,13 @@
       if(!ObjectID.isValid(id)){
         return res.status(404).send();
       }
-      Todo.findById(id).then((doc) => {
-        if(!doc){
+      Todo.findById(id).then((todo) => {
+        if(!todo){
           return res.status(404).send()
         }
-        res.send({doc})
+        res.send({todo})
       }).catch((err) => {
+        console.log(err)
         res.status(400).send()
       })
     })
