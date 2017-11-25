@@ -8,6 +8,7 @@
     var {User} = require('./models/user');
 
     var app = express();
+    const port = process.env.PORT || 3000;
 
     app.use(bodyParser.json());
 
@@ -54,8 +55,8 @@
         res.status(400).send()
       })
     })
-    app.listen(8060, () => {
-      console.log('Started on port 8060')
+    app.listen(port, () => {
+      console.log(`Started on port ${port}`)
     });
 
     module.exports = {app}
