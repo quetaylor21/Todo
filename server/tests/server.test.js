@@ -13,7 +13,9 @@
         text: 'test todo 1'
       }, {
         _id: new ObjectID(),
-        text: 'test todo two'
+        text: 'test todo two',
+        completed: true,
+        completedAt: 333
       }]
 
       // lets you run some code before every test
@@ -157,6 +159,48 @@
             request(app)
             .delete('/todos/123')
             .expect(404)
+            .end(done)
+          })
+        })
+
+        describe('Patch /todos/:id', () => {
+          it('Should update the todo', (done) => {
+            var id = todosList[0]._id.toHexString();
+            var text = 'The test text';
+
+            request(app)
+            .patch(`/todos/${id}`)
+            .send({
+              text,
+              completed: true
+            })
+            .expect(200)
+            .expect((res) => {
+              expect(res.body.todo.text).toBe(text)
+              expect(res.body.todo.completed).toBe(true)
+              expect(res.body.todo.completedAt).toBeA('number')
+            })
+            .end(done)
+
+          })
+
+          it('Should clear completedAt when todo is not completed', (done) => {
+
+            var id = todosList[1]._id.toHexString();
+            var text = 'The test text for second todo';
+
+            request(app)
+            .patch(`/todos/${id}`)
+            .send({
+              completed: false,
+              text
+            })
+            .expect(200)
+            .expect((res) => {
+              expect(res.body.todo.text).toBe(text)
+              expect(res.body.todo.completed).toBe(false)
+              expect(res.body.todo.completedAt).toNotExist()
+            })
             .end(done)
           })
         })
