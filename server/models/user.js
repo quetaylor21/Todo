@@ -57,6 +57,30 @@
       })
     }
 
-    const User = mongoose.model('User', UserSchema)
+    // statics makes it a model method instead of an instance method
+    // instant methods get called with the individual doc
+    // model methods get called with the model as the this binding
+    UserSchema.statics.findByToken = function (token) {
+      var User = this;
+      var decoded;
+
+      try{
+        decoded = jwt.verify(token, 'abc123')
+      } catch (e) {
+        // return new Promise((resolve, reject) => {
+        //   reject();
+        // })
+
+        return Promise.reject()
+      }
+
+      return User.findOne({
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth'
+      });
+    };
+
+    const User = mongoose.model('User', UserSchema);
 
     module.exports = {User}
