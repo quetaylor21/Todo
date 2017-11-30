@@ -58,6 +58,17 @@
       })
     }
 
+    UserSchema.methods.removeToken = function(token) {
+      var user = this;
+      return user.update({
+        $pull: {
+          tokens: {
+            token
+          }
+        }
+      })
+    };
+
     // statics makes it a model method instead of an instance method
     // instant methods get called with the individual doc
     // model methods get called with the model as the this binding
