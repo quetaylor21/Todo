@@ -3,6 +3,7 @@
     const validator = require('validator');
     const jwt = require('jsonwebtoken');
     const _ = require('lodash');
+    const bcrypt = require('bcryptjs');
 
     // create a schema
     var UserSchema = new mongoose.Schema({
@@ -80,6 +81,27 @@
         'tokens.access': 'auth'
       });
     };
+
+    // have to provide next to move on to next function
+    UserSchema.pre('save', function(next) {
+      var user = this;
+
+      // checks to see if password is modified
+      //only should encrypt password if it is modified
+      if(user.isModified('password')) {
+        var password = user.password;
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(password, salt, (err, hash) => {
+            if(hash){
+              user.password = hash;
+              next();
+            }
+          })
+        })
+      } else {
+        next();
+      }
+    })
 
     const User = mongoose.model('User', UserSchema);
 
