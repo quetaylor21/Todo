@@ -18,16 +18,22 @@
       _id: userTwoId,
       email: 'user2@gmail.com',
       password: 'userTwoPass',
+      tokens: [{
+        access: 'auth',
+        token: jwt.sign({_id: userTwoId, access: 'auth'}, 'abc123').toString()
+      }]
     }]
 
     const todosList = [{
       _id: new ObjectID(),
-      text: 'test todo 1'
+      text: 'test todo 1',
+      owner: users[0]._id
     }, {
       _id: new ObjectID(),
       text: 'test todo two',
       completed: true,
-      completedAt: 333
+      completedAt: 333,
+      owner: users[1]._id
     }]
 
     // lets you run some code before every test
