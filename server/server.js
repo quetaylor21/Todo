@@ -143,6 +143,6 @@
 
     module.exports = {app}
 
-    app.listen(8060, () => {
+    app.listen(port, () => {
       console.log(`Started on port ${port}`)
     });
