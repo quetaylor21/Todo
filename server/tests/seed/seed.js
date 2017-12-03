@@ -3,6 +3,7 @@
     const {Todo} = require('./../../models/todo');
     const {User} = require('./../../models/user');
     const jwt = require('jsonwebtoken');
+    const secret = process.env.JWT_SECRET;
 
     const userOneId = new ObjectID();
     const userTwoId = new ObjectID();
@@ -12,7 +13,7 @@
       password: 'userOnePass',
       tokens: [{
         access: 'auth',
-        token: jwt.sign({_id: userOneId, access: 'auth'}, 'abc123').toString()
+        token: jwt.sign({_id: userOneId, access: 'auth'}, secret).toString()
       }]
     }, {
       _id: userTwoId,
@@ -20,7 +21,7 @@
       password: 'userTwoPass',
       tokens: [{
         access: 'auth',
-        token: jwt.sign({_id: userTwoId, access: 'auth'}, 'abc123').toString()
+        token: jwt.sign({_id: userTwoId, access: 'auth'}, secret).toString()
       }]
     }]
 
