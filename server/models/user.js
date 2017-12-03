@@ -99,7 +99,7 @@
       var User = this;
       return User.findOne({email}).then((user) => {
         if(!user){
-          Promise.reject();
+          return Promise.reject();
         }
         return new Promise((resolve, reject) => {
           bcrypt.compare(password, user.password, (err, result) => {
